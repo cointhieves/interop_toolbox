@@ -30,9 +30,9 @@ jobs:
     - name: GCR Auth
       uses: google-github-actions/setup-gcloud@master
       with:
-        gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
-        service_account_email: ${{ secrets.GCP_EMAIL }}
-        service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+        gcp_project_id: ${{ secrets.gcp_project_id }}
+        service_account_email: ${{ secrets.service_account_email }}
+        service_account_key: ${{ secrets.service_account_key }}
     
     - name: Authenticate Docker
       run: gcloud auth configure-docker --quiet
