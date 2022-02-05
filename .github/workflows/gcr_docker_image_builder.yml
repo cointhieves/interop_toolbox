@@ -1,0 +1,44 @@
+name: Create and Push Docker Image's to GCR
+
+on:
+  workflow_call: 
+    inputs:
+      IMAGE_NAME:
+        required: true
+        type: string
+      TAG:
+        type: string
+      
+    secrets:
+     GCP_PROJECT_ID:
+       required: true
+     GCP_EMAIL:
+       required: true 
+     GCP_CREDENTIALS:
+       required: true
+       
+jobs:
+  gcr_docker_deployer:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: GCR Auth
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_email: ${{ secrets.GCP_EMAIL }}
+        service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+    
+    - name: Authenticate Docker
+      run: gcloud auth configure-docker --quiet
+    
+    - name: Clone Repositry
+      uses: actions/checkout@v2
+      
+    - name: Build Docker Image
+      run: docker build . -t $IMAGE_NAME 
+      
+    # Twistlock CI Scan?
+    
+    - name: Push Docker image
+      run: docker push $IMAGE_NAME 
