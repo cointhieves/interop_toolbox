@@ -27,8 +27,8 @@ jobs:
       full_repo_name: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{inputs.image_name}}
     
     steps:
-    - name:
-      run: printenv
+    - name: Print Repo name
+      run: echo ${{ github.event.repository.name }}
       
     - name: GCR Auth
       uses: google-github-actions/setup-gcloud@v0
