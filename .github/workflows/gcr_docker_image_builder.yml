@@ -28,7 +28,7 @@ jobs:
     
     steps:
     - name: GCR Auth
-      uses: google-github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@v0
       with:
         gcp_project_id: ${{ secrets.gcp_project_id }}
         service_account_email: ${{ secrets.service_account_email }}
