@@ -12,8 +12,6 @@ on:
     secrets:
      gcp_project_id:
        required: true
-     service_account_email:
-       required: true 
      service_account_key:
        required: true
      token:
@@ -26,14 +24,21 @@ jobs:
     env:
       full_repo_name: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{inputs.image_name}}
     
-    steps:      
-    - name: GCR Auth
-      uses: google-github-actions/setup-gcloud@v0
+    steps:    
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v0'
       with:
-        gcp_project_id: ${{ secrets.gcp_project_id }}
-        service_account_email: ${{ secrets.service_account_email }}
-        service_account_key: ${{ secrets.service_account_key }}
-      if: success() 
+        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v0'
+#     - name: GCR Auth
+#       uses: google-github-actions/setup-gcloud@v0
+#       with:
+#         gcp_project_id: ${{ secrets.gcp_project_id }}
+#         service_account_email: ${{ secrets.service_account_email }}
+#         service_account_key: ${{ secrets.service_account_key }}
+#       if: success() 
     
     - name: Authenticate Docker
       run: gcloud auth configure-docker --quiet
