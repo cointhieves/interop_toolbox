@@ -4,8 +4,8 @@ on:
   workflow_call:
     inputs:
       image_name:
-        required: true
         type: string
+        default: ${{ github.event.repository.name }}
       tag:
         type: string
       
@@ -26,10 +26,7 @@ jobs:
     env:
       full_repo_name: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{inputs.image_name}}
     
-    steps:
-    - name: Print Repo name
-      run: echo ${{ github.event.repository.name }}
-      
+    steps:      
     - name: GCR Auth
       uses: google-github-actions/setup-gcloud@v0
       with:
