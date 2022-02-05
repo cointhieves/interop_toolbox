@@ -38,9 +38,9 @@ jobs:
       uses: actions/checkout@v2
       
     - name: Build Docker Image
-      run: docker build -t $image_name .
+      run: docker build -t ${{inputs.image_name}} .
       
     # Twistlock CI Scan?
     
     - name: Push Docker image
-      run: docker push $image_name 
+      run: docker push ${{inputs.image_name}}
