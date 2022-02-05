@@ -47,6 +47,7 @@ jobs:
       
   terraform_plan:
     runs-on: ubuntu-latest
+    needs: job1
     
     env:
       full_repo_name: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{inputs.image_name}}
