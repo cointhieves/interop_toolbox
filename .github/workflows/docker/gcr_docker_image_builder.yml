@@ -27,12 +27,16 @@ jobs:
       full_repo_name: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{inputs.image_name}}
     
     steps:
+    - name:
+      run: printenv
+      
     - name: GCR Auth
       uses: google-github-actions/setup-gcloud@v0
       with:
         gcp_project_id: ${{ secrets.gcp_project_id }}
         service_account_email: ${{ secrets.service_account_email }}
         service_account_key: ${{ secrets.service_account_key }}
+      if: success() 
     
     - name: Authenticate Docker
       run: gcloud auth configure-docker --quiet
@@ -42,8 +46,10 @@ jobs:
       
     - name: Build Docker Image
       run: docker build -t $full_repo_name .
+      if: success()
       
     # Twistlock CI Scan?
+    # if: success()
     
     - name: Push Docker image
       run: docker push $full_repo_name
