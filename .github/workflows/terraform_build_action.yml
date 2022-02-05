@@ -42,7 +42,7 @@ jobs:
       if: success() 
       
     - name: Test something
-      run: pwd && ls -larth
+      run: terraform --verison
       if: success()
       
   terraform_plan:
