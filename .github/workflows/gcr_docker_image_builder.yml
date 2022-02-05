@@ -16,6 +16,8 @@ on:
        required: true 
      service_account_key:
        required: true
+     token:
+       required: true
        
 jobs:
   gcr_docker_deployer:
