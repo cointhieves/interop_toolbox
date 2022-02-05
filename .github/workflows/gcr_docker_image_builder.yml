@@ -24,6 +24,10 @@ jobs:
     env:
       full_repo_name: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{inputs.image_name}}
     
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    
     steps:    
     - id: 'auth'
       uses: 'google-github-actions/auth@v0'
