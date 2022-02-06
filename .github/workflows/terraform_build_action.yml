@@ -43,11 +43,6 @@ jobs:
       
     - uses: hashicorp/setup-terraform@v1
 
-    - name: Terraform fmt
-      id: fmt
-      run: terraform fmt -check
-      continue-on-error: true
-
     - name: Terraform Init
       id: init
       run: terraform init
@@ -80,6 +75,10 @@ jobs:
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v0'
       if: success() 
+      
+    - name: Terraform Init
+      id: init
+      run: terraform init
       
     - name: Terraform Plan
       id: plan
