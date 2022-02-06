@@ -38,6 +38,7 @@ jobs:
           prod) export WORKSPACE_NAME="prod" ;;
             dev) export WORKSPACE_NAME="$GITHUB_REF_NAME" ;;
           esac
+        echo "$WORKSPACE_NAME"
     
     - name: Print workspace name
       run: echo "$WORKSPACE_NAME"
