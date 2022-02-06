@@ -35,6 +35,7 @@ jobs:
     - name: Set TF_VAR variables
       run: |
         export TF_VAR_gcr_repo_name=${{inputs.TF_VAR_gcr_repo_name}}
+        echo $TF_VAR_gcr_repo_name
       
     - id: 'auth'
       uses: 'google-github-actions/auth@v0'
