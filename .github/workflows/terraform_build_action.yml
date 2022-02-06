@@ -41,14 +41,21 @@ jobs:
       uses: 'google-github-actions/setup-gcloud@v0'
       if: success()
       
-    - name: Print vars
-      run: printenv
-      if: success() 
-    
-    - name: Run Something
-      run: terraform version
-      if: success() 
-      
+    - uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform fmt
+      id: fmt
+      run: terraform fmt -check
+      continue-on-error: true
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+
       
   terraform_plan:
     runs-on: ubuntu-latest
