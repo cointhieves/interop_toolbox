@@ -32,6 +32,10 @@ jobs:
     - name: Clone Repositry
       uses: actions/checkout@v2
       
+    - name: Set TF_VAR variables
+      run: |
+        export TF_VAR_gcr_repo_name=$TF_VAR_gcr_repo_name
+      
     - id: 'auth'
       uses: 'google-github-actions/auth@v0'
       with:
@@ -64,6 +68,10 @@ jobs:
     steps:
     - name: Clone Repositry
       uses: actions/checkout@v2
+    
+    - name: Set TF_VAR variables
+      run: |
+        export TF_VAR_gcr_repo_name=$TF_VAR_gcr_repo_name
       
     - id: 'auth'
       uses: 'google-github-actions/auth@v0'
@@ -94,6 +102,10 @@ jobs:
     steps:
     - name: Clone Repositry
       uses: actions/checkout@v2
+    
+    - name: Set TF_VAR variables
+      run: |
+        export TF_VAR_gcr_repo_name=$TF_VAR_gcr_repo_name
       
     - id: 'auth'
       uses: 'google-github-actions/auth@v0'
