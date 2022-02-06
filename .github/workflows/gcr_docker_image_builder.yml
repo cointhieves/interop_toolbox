@@ -31,7 +31,17 @@ jobs:
     steps:
     - name: Clone Repositry
       uses: actions/checkout@v2
-      
+    
+    - name: Set environment variables
+      run: |
+        case "$GITHUB_REF_NAME" in
+        main) WORKSPACE_NAME="prod" ;;
+          dev) WORKSPACE_NAME="$GITHUB_REF_NAME" ;;
+        esac
+    
+    - name: Print workspace name
+      run: echo $WORKSPACE_NAME
+
     - id: 'auth'
       uses: 'google-github-actions/auth@v0'
       with:
