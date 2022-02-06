@@ -89,7 +89,7 @@ jobs:
       
   terraform_apply:
     runs-on: ubuntu-latest
-    needs: terraform_validate
+    needs: [terraform_validate, terraform_plan]
     
     env:
       full_repo_name: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{inputs.image_name}}
