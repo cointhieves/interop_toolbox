@@ -127,6 +127,6 @@ jobs:
     - name: Terraform Apply
       id: apply
       run: terraform apply -auto-approve
-      continue-on-error: true
+      continue-on-error: false
       env:
         TF_VAR_gcr_repo_name: ${{inputs.TF_VAR_gcr_repo_name}}
