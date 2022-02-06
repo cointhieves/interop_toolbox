@@ -8,9 +8,6 @@ on:
       gcp_region:
         type: string
         default: "us-central1"
-      TF_VAR_gcr_repo_name:
-        type: string
-        default: ${{ github.event.repository.name }}
       
     secrets:
      gcp_project_id:
