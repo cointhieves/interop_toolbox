@@ -42,11 +42,11 @@ jobs:
       if: success()
       
     - name: Print vars
-      uses: printenv
+      run: printenv
       if: success() 
     
     - name: Run Something
-      uses: terraform version
+      run: terraform version
       if: success() 
       
       
