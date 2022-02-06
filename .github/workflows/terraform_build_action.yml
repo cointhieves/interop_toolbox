@@ -6,13 +6,14 @@ on:
       terraform_base_name:
         type: string
         default: ${{ github.event.repository.name }}
+      gcp_region:
+        type: string
+        default: "us-central1"
       
     secrets:
      gcp_project_id:
        required: true
      service_account_key:
-       required: true
-     gcp_region:
        required: true
      token:
        required: true
