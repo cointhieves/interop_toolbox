@@ -34,9 +34,9 @@ jobs:
     
     - name: Set environment variables
       run: |
-        case '${{ env.GITHUB_REF_NAME }}' in
+        case "$GITHUB_REF_NAME" in
         main) WORKSPACE_NAME="prod" ;;
-          dev) WORKSPACE_NAME='${{ env.GITHUB_REF_NAME }' ;;
+          dev) WORKSPACE_NAME="$GITHUB_REF_NAME" ;;
         esac
     
     - name: Print workspace name
