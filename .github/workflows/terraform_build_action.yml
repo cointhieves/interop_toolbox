@@ -39,6 +39,10 @@ jobs:
 
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v0'
+      if: success()
+    
+    - name: Run Something
+      uses: terraform version
       if: success() 
       
       
