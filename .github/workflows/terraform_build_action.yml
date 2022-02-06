@@ -93,7 +93,7 @@ jobs:
       run: terraform plan -no-color
       continue-on-error: false
       env:
-        gcr_repo_name: ${{inputs.TF_VAR_gcr_repo_name}}
+        TF_VAR_gcr_repo_name: ${{inputs.TF_VAR_gcr_repo_name}}
       
   terraform_apply:
     runs-on: ubuntu-latest
