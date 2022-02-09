@@ -32,6 +32,9 @@ jobs:
     - name: Clone Repositry
       uses: actions/checkout@v2
       
+    - name: Print env
+      run: printenv
+      
 #     - name: Set TF_VAR variables
 #       run: |
 #         export TF_VAR_gcr_repo_name=${{inputs.TF_VAR_gcr_repo_name}}
