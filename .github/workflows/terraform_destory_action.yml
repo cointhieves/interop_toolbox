@@ -1,0 +1,58 @@
+name: Terraform Build Action
+
+on:
+  workflow_call:
+    inputs:
+      terraform_base_name:
+        type: string
+      gcp_region:
+        type: string
+        default: "us-central1"
+      TF_VAR_gcr_repo_name:
+        type: string
+        default: ${{ github.event.repository.name }}
+      
+    secrets:
+     gcp_project_id:
+       required: true
+     service_account_key:
+       required: true
+     token:
+       required: true
+       
+jobs:      
+  terraform_destroy:
+    runs-on: ubuntu-latest
+    needs: [terraform_validate, terraform_plan]
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    
+    steps:
+    - name: Clone Repositry
+      uses: actions/checkout@v2
+    
+    - name: Set TF_VAR variables
+      run: |
+        export TF_VAR_gcr_repo_name=${{inputs.TF_VAR_gcr_repo_name}}
+      
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.service_account_key }}'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v0'
+      if: success() 
+      
+    - name: Terraform Init
+      id: init
+      run: terraform init
+      
+    - name: Terraform Destroy
+      id: apply
+      run: terraform destroy -auto-approve
+      continue-on-error: false
+      env:
+        TF_VAR_gcr_repo_name: ${{inputs.TF_VAR_gcr_repo_name}}
