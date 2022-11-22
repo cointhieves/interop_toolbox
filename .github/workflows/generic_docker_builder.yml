@@ -1,0 +1,39 @@
+name: Create and Push Docker Image To Pipline Artifact
+
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        type: string
+        default: ${{ github.event.repository.name }}
+      tag:
+        type: string
+        default: ${{ github.run_number }}
+
+jobs:
+  docker_builder:
+    runs-on: ubuntu-latest
+    
+    env:
+      image_name: ${{inputs.image_name}}:${{inputs.tag}}
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    
+    steps:
+    - name: Clone Repositry
+      uses: actions/checkout@v3
+
+    - name: Build and Package Docker Image
+      run: |
+        docker build -t $image_name .
+        docker save $image_name > image_pkg.tar
+      if: success()
+      
+    - name: Upload Docker Image
+      uses: actions/upload-artifact@v3
+      with:
+        name: image_pkg
+        path: image_pkg.tar
+        retention-days: 7
