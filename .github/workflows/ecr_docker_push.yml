@@ -1,0 +1,52 @@
+name: Deploy AWS ECR Container Images
+
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        type: string
+        default: ${{ github.event.repository.name }}
+      tag:
+        type: string
+        default: ${{ github.run_number }}
+
+jobs:
+  docker_builder:
+    runs-on: ubuntu-latest
+    
+    env:
+      image_name: ${{inputs.image_name}}:${{inputs.tag}}
+    
+    steps:
+    - name: Clone Repositry
+      uses: actions/checkout@v3
+      
+    - name: Download Docker Image 
+      uses: actions/download-artifact@v3
+      with:
+        name: image_pkg
+      
+    - name: Load and Tag Docker Image
+      run: |
+          docker load -i  image_pkg.tar 
+          IMAGEID=`docker images $image_name --format "{{.ID}}"`
+          docker tag $IMAGEID $full_repo_name
+      if: success()
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1 # More information on this action can be found below in the 'AWS Credentials' section
+      with:
+        aws-region: us-east-1
+        
+    - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: my-ecr-repo
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
