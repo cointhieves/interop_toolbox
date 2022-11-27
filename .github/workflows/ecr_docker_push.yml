@@ -31,13 +31,6 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: image_pkg
-      
-    - name: Load and Tag Docker Image
-      run: |
-          docker load -i  image_pkg.tar 
-          IMAGEID=`docker images $image_name --format "{{.ID}}"`
-          docker tag $IMAGEID $full_repo_name
-      if: success()
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1 # More information on this action can be found below in the 'AWS Credentials' section
