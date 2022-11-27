@@ -52,10 +52,12 @@ jobs:
     - name: Download, tag, and push docker image to Amazon ECR
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        REPOSITORY: ${{inputs.ecr_repository}}
         IMAGE_TAG: ${{inputs.tag}}
       run: |
+        aws ecr create-repository --repository-name $image_name \
+          --image-scanning-configuration scanOnPush=true \
+          --encryption-configuration encryptionType=AES256 || true
         docker load -i  image_pkg.tar 
         IMAGEID=`docker images $image_name --format "{{.ID}}"`
-        docker tag $IMAGEID $REGISTRY/$REPOSITORY:$IMAGE_TAG
-        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        docker tag $IMAGEID $REGISTRY/$image_name:$IMAGE_TAG
+        docker push $REGISTRY/$image_name:$IMAGE_TAG
