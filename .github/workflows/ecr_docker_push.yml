@@ -47,6 +47,7 @@ jobs:
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         REPOSITORY: my-ecr-repo
+        IMAGE_TAG: ${{inputs.tag}}
       run: |
         echo $REGISTRY
         docker load -i  image_pkg.tar 
