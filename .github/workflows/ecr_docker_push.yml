@@ -50,7 +50,9 @@ jobs:
         IMAGE_TAG: ${{inputs.tag}}
       run: |
         echo $REGISTRY
+        echo $IMAGE_TAG
         docker load -i  image_pkg.tar 
         IMAGEID=`docker images $image_name --format "{{.ID}}"`
+        echo $IMAGEID
         docker tag $IMAGEID $REGISTRY/$REPOSITORY:$IMAGE_TAG
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
