@@ -8,9 +8,9 @@ on:
         default: ${{ github.event.repository.name }}
       
     secrets:
-     service_account_key:
+     AWS_ACCESS_ID:
        required: true
-     token:
+     AWS_ACCESS_SECRET:
        required: true
        
 jobs:
