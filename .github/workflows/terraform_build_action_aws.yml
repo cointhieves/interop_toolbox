@@ -6,9 +6,9 @@ on:
       TF_VAR_repo_name:
         type: string
         default: ${{ github.event.repository.name }}
-      TF_VAR_image_name_tag_combined:
+      TF_VAR_image_tag:
         type: string
-        default: ${{ github.event.repository.name }}:${{ github.run_number }}
+        default: ${{ github.run_number }}
       
     secrets:
      AWS_ACCESS_ID:
@@ -82,7 +82,7 @@ jobs:
       continue-on-error: false
       env:
         TF_VAR_repo_name: ${{inputs.TF_VAR_repo_name}}
-        TF_VAR_image_name_tag_combined: ${{inputs.TF_VAR_image_name_tag_combined}}
+        TF_VAR_image_tag: ${{inputs.TF_VAR_image_tag}}
       
   terraform_apply:
     runs-on: ubuntu-latest
@@ -116,4 +116,4 @@ jobs:
       continue-on-error: false
       env:
         TF_VAR_repo_name: ${{inputs.TF_VAR_repo_name}}
-        TF_VAR_image_name_tag_combined: ${{inputs.TF_VAR_image_name_tag_combined}}
+        TF_VAR_image_tag: ${{inputs.TF_VAR_image_tag}}
