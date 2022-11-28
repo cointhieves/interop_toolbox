@@ -59,7 +59,7 @@ jobs:
         aws ecr create-repository --repository-name $REPOSITORY \
           --image-scanning-configuration scanOnPush=true \
           --region $AWS_REGION \
-          --encryption-configuration encryptionType=KMS || true
+          --encryption-configuration encryptionType=AES256 || true
         docker load -i  image_pkg.tar 
         IMAGEID=`docker images $image_name_tag_combined --format "{{.ID}}"`
         docker tag $IMAGEID $REGISTRY/$REPOSITORY:$IMAGE_TAG
