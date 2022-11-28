@@ -1,0 +1,51 @@
+name: Terraform Build Action
+
+on:
+  workflow_call:
+    inputs:
+      TF_VAR_repo_name:
+        type: string
+        default: ${{ github.event.repository.name }}
+      TF_VAR_image_tag:
+        type: string
+        default: ${{ github.run_number }}
+      
+    secrets:
+     AWS_ACCESS_ID:
+       required: true
+     AWS_ACCESS_SECRET:
+       required: true
+       
+jobs:      
+  terraform_destroy:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    
+    steps:
+    - name: Clone Repositry
+      uses: actions/checkout@v2
+    
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_ACCESS_SECRET }}
+        aws-region: us-east-1
+        role-duration-seconds: 1200
+        role-session-name: GitHub Actions Session
+      if: success()
+      
+    - name: Terraform Init
+      id: init
+      run: terraform init
+      
+    - name: Terraform Destroy
+      id: apply
+      run: terraform destroy -auto-approve
+      continue-on-error: false
+      env:
+        TF_VAR_repo_name: ${{inputs.TF_VAR_repo_name}}
+        TF_VAR_image_tag: ${{inputs.TF_VAR_image_tag}}
