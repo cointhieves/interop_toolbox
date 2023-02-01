@@ -1,0 +1,39 @@
+name: Splunk App Inspect
+on:
+  workflow_call:
+    inputs:
+      app_path:
+        type: string
+        
+jobs:    
+  splunk-appinspect:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone Repositry
+      uses: actions/checkout@v3
+
+    - name: Tar Splunk App
+      run: |
+        tar -czvf ~/${{inputs.app_path}}.tar.gz ${{inputs.app_path}}
+        pip install splunk-appinspect
+        
+    - name: Run App Inspect
+      run: |
+        splunk-appinspect inspect ~/${{inputs.app_path}}.tar.gz --mode precert --included-tags cloud --data-format json --output-file results.json
+        FAILURE_OUTPUT=$(cat results.json |jq '.summary.failure')
+        ERROR_OUTPUT=$(cat results.json |jq '.summary.error')
+        if [ ${FAILURE_OUTPUT} == 1 ] || [ ${ERROR_OUTPUT} == 1 ] 
+        then
+          echo "Failure code found in Splunk AppInspect, review errors"
+          exit 1
+        else
+          echo "Splunk AppInspect returned clean, ready for export"
+        fi
+        
+        
+    - name: Upload Splunk App
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{inputs.app_path}}.tar.gz
+        path: ~/${{inputs.app_path}}.tar.gz
+        retention-days: 1    
