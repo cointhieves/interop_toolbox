@@ -43,14 +43,14 @@ jobs:
       
       - name: Build Lambda Deployment Package
         run: |
-          # Clean any previous builds
+          # Clean up any previous builds
           rm -rf package lambda_function.zip
           mkdir package
-          # Install dependencies into the package directory
-          pip install -r requirements.txt -t package
-          # Copy your Lambda function code into the package
-          cp lambda_function.py package/
-          # Zip the package directory
+          # Install dependencies from /code/requirements.txt into the package directory
+          pip install -r code/requirements.txt -t package
+          # Copy your Lambda function code from /code/main.py into the package
+          cp code/main.py package/
+          # Create a zip file including all files from the package directory
           cd package
           zip -r ../lambda_function.zip .
           cd ..
@@ -96,8 +96,8 @@ jobs:
         run: |
           rm -rf package lambda_function.zip
           mkdir package
-          pip install -r requirements.txt -t package
-          cp lambda_function.py package/
+          pip install -r code/requirements.txt -t package
+          cp code/main.py package/
           cd package
           zip -r ../lambda_function.zip .
           cd ..
@@ -146,8 +146,8 @@ jobs:
         run: |
           rm -rf package lambda_function.zip
           mkdir package
-          pip install -r requirements.txt -t package
-          cp lambda_function.py package/
+          pip install -r code/requirements.txt -t package
+          cp code/main.py package/
           cd package
           zip -r ../lambda_function.zip .
           cd ..
