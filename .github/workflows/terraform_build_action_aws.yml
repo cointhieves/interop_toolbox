@@ -87,33 +87,50 @@ jobs:
   terraform_apply:
     runs-on: ubuntu-latest
     needs: [terraform_validate, terraform_plan]
-
     permissions:
       contents: 'read'
       id-token: 'write'
-    
     steps:
-    - name: Clone Repositry
-      uses: actions/checkout@v2
+      - name: Clone Repository
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_SECRET }}
+          aws-region: us-east-1
+          role-duration-seconds: 1200
+          role-session-name: GitHub Actions Session
+        if: success()
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
       
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_ACCESS_SECRET }}
-        aws-region: us-east-1
-        role-duration-seconds: 1200
-        role-session-name: GitHub Actions Session
-      if: success()
+      - name: Build Lambda Deployment Package
+        run: |
+          # Remove any existing package directory and zip file
+          rm -rf package lambda_function.zip
+          mkdir package
+          # Install dependencies from requirements.txt into the package directory
+          pip install -r requirements.txt -t package
+          # Copy the Lambda function code into the package
+          cp lambda_function.py package/
+          # Change to the package directory and create a zip file including all files
+          cd package
+          zip -r ../lambda_function.zip .
+          cd ..
+          ls -lah lambda_function.zip  # List the zip file to verify it exists
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
       
-    - name: Terraform Init
-      id: init
-      run: terraform init
-      
-    - name: Terraform Apply
-      id: apply
-      run: terraform apply -auto-approve
-      continue-on-error: false
-      env:
-        TF_VAR_repo_name: ${{inputs.TF_VAR_repo_name}}
-        TF_VAR_image_tag: ${{inputs.TF_VAR_image_tag}}
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply -auto-approve
+        env:
+          TF_VAR_repo_name: ${{inputs.TF_VAR_repo_name}}
+          TF_VAR_image_tag: ${{inputs.TF_VAR_image_tag}}
